@@ -1,25 +1,16 @@
-import { useState } from "react";
 import ThreeBoxes from "./components/ThreeBoxes";
+import { Canvas } from "@react-three/fiber";
 
 function App() {
-  const [content, setContent] = useState("boxes");
-
-  let canvas = <ThreeBoxes />;
-  switch (content) {
-    case "boxes":
-      canvas = <ThreeBoxes />;
-      break;
-    default:
-      canvas = <ThreeBoxes />;
-  }
-
   return (
     <div style={{ position: "relative" }}>
-      <div style={{ position: "absolute", zIndex: 100 }}>
-        <button style={{backgroundColor: "none"}} onClick={() => setContent("boxes")}>BOXES</button>
-      </div>
       <div id="canvas-container">
-        {canvas}
+        <Canvas
+          camera={{ fov: 70, near: 0.1, far: 2000 }}
+          style={{ width: "100vw", height: "100vh" }}
+        >
+          <ThreeBoxes />
+        </Canvas>
       </div>
     </div>
   );
