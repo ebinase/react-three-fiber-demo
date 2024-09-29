@@ -1,17 +1,26 @@
 import { MeshProps, useFrame } from "@react-three/fiber";
-import { FC, useRef } from "react";
+import { FC, useRef, useState } from "react";
 import { Mesh } from "three";
 
 const Box: FC = (props: MeshProps) => {
+  const [clicked, setClicked] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  
   const ref = useRef({} as Mesh);
   useFrame(() => {
     ref.current.rotation.x += 0.01;
-    ref.current.rotation.y += 0.01;
   });
   return (
-    <mesh ref={ref} {...props}>
+    <mesh
+      {...props}
+      ref={ref}
+      onClick={() => setClicked(!clicked)}
+      scale={clicked ? 2 : 1}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
+    >
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial />
+      <meshPhongMaterial color={hovered ? "orange" : "hotpink"} />
     </mesh>
   );
 };
