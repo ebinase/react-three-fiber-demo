@@ -1,5 +1,5 @@
-import ThreeBoxes from "./components/ThreeBoxes";
 import { Canvas } from "@react-three/fiber";
+import Space from "./components/space/Space";
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
           camera={{ fov: 70, near: 0.1, far: 2000 }}
           style={{ width: "100vw", height: "100vh" }}
         >
-          <ThreeBoxes />
+          <Space />
         </Canvas>
       </div>
     </div>
