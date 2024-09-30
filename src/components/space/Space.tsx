@@ -23,7 +23,7 @@ const Space: FC = () => {
       />
       {/* 裏側も見えるようにするためのライト */}
       <directionalLight
-        position={[-100, -100, -100]}
+        position={[-100, -50, -100]}
         intensity={0.5}
         color={"white"}
       />
@@ -35,7 +35,7 @@ const Space: FC = () => {
       <group ref={earthRef}>
         <mesh>
           <sphereGeometry args={[1, 32, 32]} />
-          <meshPhongMaterial map={texture} />
+          <meshPhongMaterial map={texture} emissive={"white"} emissiveIntensity={0.01} />
         </mesh>
       </group>
     </>
