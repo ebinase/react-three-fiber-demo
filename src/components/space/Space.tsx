@@ -1,16 +1,16 @@
-import {OrbitControls, Stars, useGLTF, useTexture } from "@react-three/drei";
+import {OrbitControls, Stars } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { FC, useRef } from "react";
 import { Group, Mesh, Vector3 } from "three";
+import Earth from "./Earth";
+import Starship from "./Starship";
 
 const Space: FC = () => {
-  const earthRef = useRef({} as Group);
   const starsRef = useRef({} as Group);
   const satelliteRef = useRef({} as Mesh);
   const starshipRef = useRef({} as Mesh);
   const { camera, size } = useThree();
   useFrame((state) => {
-    earthRef.current.rotation.y += 0.003;
     starsRef.current.rotation.y += 0.0003;
 
     const t = state.clock.getElapsedTime();
@@ -33,8 +33,7 @@ const Space: FC = () => {
     starshipRef.current.position.set(vector.x, vector.y, vector.z);
     starshipRef.current.lookAt(0,0,0);
   });
-  const texture = useTexture("/src/assets/earch1024x512.png");
-  const { scene } = useGLTF('/src/assets/starship.gltf')
+
   return (
     <>
       <color args={["#000"]} attach={"background"} />
@@ -56,16 +55,7 @@ const Space: FC = () => {
         <Stars />
       </group>
       {/* 自転する地球 */}
-      <group ref={earthRef}>
-        <mesh>
-          <sphereGeometry args={[1, 32, 32]} />
-          <meshPhongMaterial
-            map={texture}
-            emissive={"white"}
-            emissiveIntensity={0.01}
-          />
-        </mesh>
-      </group>
+      <Earth />
       {/* 軌道上を回るキューブ */}
       <mesh ref={satelliteRef} position={[1.2, 0, 0]}>
         <boxGeometry  args={[.1, .1, .1]} />
@@ -73,7 +63,7 @@ const Space: FC = () => {
       </mesh>
       {/* 宇宙船 */}
       {/* download from https://market.pmnd.rs/model/low-poly-spaceship */}
-      <primitive scale={.02} ref={starshipRef} object={scene}/>
+      <Starship scale={.02} ref={starshipRef}/>
     </>
   );
 };
