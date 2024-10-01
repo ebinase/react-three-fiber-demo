@@ -2,34 +2,42 @@ import { Canvas } from "@react-three/fiber";
 import Space from "./components/space/Space";
 import React from "react";
 import ThreeBoxes from "./components/ThreeBoxes";
+import { match } from "ts-pattern";
 
 function App() {
-  const [workNum, setWorkNum] = React.useState(1);
+  const [worldNum, setWorldNum] = React.useState(0);
 
   return (
     <div className="relative">
-      <button
-        className="absolute top-0 right-0 m-4 p-2 bg-gray-500 text-white z-10"
-        onClick={() => setWorkNum(workNum + 1)}
+      <div className="absolute top-0 right-0 m-4 z-10 opacity-0 hover:opacity-100 flex gap-2">
+        <button
+        className="p-2 bg-gray-500/30 rounded-md text-white  "
+        onClick={() => setWorldNum(worldNum + 1)}
       >
-        切り替え
+        NEXT
       </button>
+      </div> 
       <div id="canvas-container">
-        {workNum ? (
-          <Canvas
-            camera={{ fov: 70, near: 0.1, far: 2000 }}
-            className="w-[100vw] h-[100vh]"
-          >
-            <Space />
-          </Canvas>
-        ) : (
-          <Canvas
-            camera={{ fov: 70, near: 0.1, far: 2000 }}
-            className="w-[100vw] h-[100vh]"
-          >
-            <ThreeBoxes />
-          </Canvas>
-        )}
+        {match(worldNum % 2)
+          .with(0, () => (
+            <Canvas
+              camera={{ fov: 70, near: 0.1, far: 2000 }}
+              style={{ width: "100vw", height: "100vh" }}
+            >
+              <Space />
+            </Canvas>
+          ))
+          .with(1, () => (
+            <Canvas
+              camera={{ fov: 70, near: 0.1, far: 2000 }}
+              style={{ width: "100vw", height: "100vh" }}
+            >
+              <ThreeBoxes />
+            </Canvas>
+          ))
+          .otherwise(() => (
+            <h1 className="text-4xl text-center">ERROR!!</h1>
+          ))}
       </div>
     </div>
   );
