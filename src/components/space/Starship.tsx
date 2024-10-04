@@ -12,7 +12,7 @@ const Starship = forwardRef<Mesh, Props>(({ scale = 1.0 }, ref = null) => {
   return (
     <group>
       <primitive object={starshipModel} scale={scale} ref={ref}>
-        <mesh rotation={[(Math.PI * 3) / 2, 0, 0]} position={[0, -0.12, -2.6]}>
+        <mesh rotation={[(Math.PI * 3) / 2, 0, 0]} position={[0, -0.44, -2]}>
           <coneGeometry args={[0.2, 1]} />
           <meshPhongMaterial
             color={"#3cd4e8"}
