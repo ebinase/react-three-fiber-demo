@@ -59,10 +59,10 @@ const Space: FC = () => {
       {/* 軌道上を回るキューブ */}
       <mesh ref={satelliteRef} position={[1.2, 0, 0]}>
         <boxGeometry  args={[.1, .1, .1]} />
-        <meshPhongMaterial />
+        <meshPhongMaterial emissive={"white"} emissiveIntensity={2} />
+        <pointLight intensity={1.5} distance={10} decay={2} color={"white"} />
       </mesh>
       {/* 宇宙船 */}
-      {/* download from https://market.pmnd.rs/model/low-poly-spaceship */}
       <Starship scale={.02} ref={starshipRef}/>
     </>
   );
