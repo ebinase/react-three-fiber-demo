@@ -1,10 +1,10 @@
 import { Canvas } from "@react-three/fiber";
-import Space from "./components/space/Space";
+import Space from "./scene/Space";
 import React from "react";
-import ThreeBoxes from "./components/ThreeBoxes";
+import ThreeBoxes from "./scene/ThreeBoxes";
 import { match } from "ts-pattern";
 import { Stats } from "@react-three/drei";
-import NoContent from "./components/common/NoContent";
+import NoContent from "./scene/NoContent";
 
 function App() {
   const [worldNum, setWorldNum] = React.useState(0);

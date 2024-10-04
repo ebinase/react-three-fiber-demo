@@ -2,7 +2,7 @@ import { MeshProps, useFrame } from "@react-three/fiber";
 import { useRef, useState } from "react";
 import { Mesh } from "three";
 
-const Box = (props: MeshProps) => {
+const ClickableBox = (props: MeshProps) => {
   const [clicked, setClicked] = useState(false);
   const [hovered, setHovered] = useState(false);
 
@@ -25,4 +25,4 @@ const Box = (props: MeshProps) => {
   );
 };
 
-export default Box;
+export default ClickableBox;

@@ -2,8 +2,8 @@ import {OrbitControls, Stars } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { FC, useRef } from "react";
 import { Group, Mesh, Vector3 } from "three";
-import Earth from "./Earth";
-import Starship from "./Starship";
+import Earth from "../components/space/Earth";
+import Starship from "../components/space/Starship";
 
 const Space: FC = () => {
   const starsRef = useRef({} as Group);

@@ -1,4 +1,4 @@
-import ClickableBox from "./Box";
+import ClickableBox from "../components/basic/ClickableBox";
 import { OrbitControls } from "@react-three/drei";
 
 const ThreeBoxes = () => {
