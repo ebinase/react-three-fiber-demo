@@ -29,7 +29,7 @@ function App() {
       <div id="canvas-container">
         <Canvas
           camera={{ fov: 70, near: 0.1, far: 2000 }}
-          style={{ width: "100vw", height: "100vh" }}
+          style={{ width: "100dvw", height: "100dvh" }}
         >
           {devMode && (
             <>
