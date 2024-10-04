@@ -1,4 +1,4 @@
-import {OrbitControls, Stars } from "@react-three/drei";
+import { OrbitControls, Stars } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { FC, useRef } from "react";
 import { Group, Mesh, Vector3 } from "three";
@@ -16,7 +16,7 @@ const Space: FC = () => {
     const t = state.clock.getElapsedTime();
     satelliteRef.current.position.x = 1.2 * Math.cos(t);
     satelliteRef.current.position.z = 1.2 * Math.sin(t);
-    satelliteRef.current.lookAt(0,0,0);
+    satelliteRef.current.lookAt(0, 0, 0);
 
     // スクリーン座標での位置（例えば、右下に固定したい場合）
     const screenX = size.width * 0.5;
@@ -31,7 +31,7 @@ const Space: FC = () => {
 
     // モデルの位置を更新
     starshipRef.current.position.set(vector.x, vector.y, vector.z);
-    starshipRef.current.lookAt(0,0,0);
+    starshipRef.current.lookAt(0, 0, 0);
   });
 
   return (
@@ -58,12 +58,12 @@ const Space: FC = () => {
       <Earth />
       {/* 軌道上を回るキューブ */}
       <mesh ref={satelliteRef} position={[1.2, 0, 0]}>
-        <boxGeometry  args={[.1, .1, .1]} />
+        <boxGeometry args={[0.1, 0.1, 0.1]} />
         <meshPhongMaterial emissive={"white"} emissiveIntensity={2} />
         <pointLight intensity={1.5} distance={10} decay={2} color={"white"} />
       </mesh>
       {/* 宇宙船 */}
-      <Starship scale={.02} ref={starshipRef}/>
+      <Starship scale={0.02} ref={starshipRef} />
     </>
   );
 };

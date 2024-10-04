@@ -14,7 +14,9 @@ function App() {
     <div className="relative">
       <div className="absolute top-0 right-0 m-4 z-10 opacity-0 hover:opacity-100 flex gap-2">
         <button
-          className={`p-2 rounded-md text-white ${devMode ? 'bg-gray-500/70' : 'bg-gray-500/30'}`}
+          className={`p-2 rounded-md text-white ${
+            devMode ? "bg-gray-500/70" : "bg-gray-500/30"
+          }`}
           onClick={() => setDevMode(!devMode)}
         >
           DEV MODE
@@ -43,7 +45,9 @@ function App() {
           {match(worldNum % 3)
             .with(0, () => <Space />)
             .with(1, () => <ThreeBoxes />)
-            .otherwise(() => <NoContent />)}
+            .otherwise(() => (
+              <NoContent />
+            ))}
         </Canvas>
       </div>
     </div>
