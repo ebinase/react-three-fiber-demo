@@ -22,8 +22,8 @@ const Starship = forwardRef<Mesh, Props>(({ scale = 1.0 }, ref = null) => {
         </mesh>
         <pointLight
           position={[0, 0.5, -5]}
-          intensity={0.6}
-          distance={0.085}
+					intensity={50 * scale}
+					distance={4.25 * scale}
           color={"#3cd4e8"}
         />
       </primitive>
