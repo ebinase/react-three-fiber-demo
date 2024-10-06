@@ -1,25 +1,25 @@
-import { OrbitControls, Stars } from "@react-three/drei";
+import { Stars } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { FC, useRef } from "react";
 import { Mesh } from "three";
 import Earth from "../components/space/Earth";
 import Starship from "../components/space/Starship";
 import Sun from "../components/space/Sun";
+import FollowCamera from "../components/camera/FollowCamera";
 
 const SpaceShootingGame: FC = () => {
   const starshipRef = useRef({} as Mesh);
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
 
-    starshipRef.current.position.y += 0.001 * Math.sin(t);
+    starshipRef.current.rotation.y += Math.sin(t) * 0.01;
   });
 
   return (
-    <>
+    <group>
       <color args={["#000"]} attach={"background"} />
       {/* 太陽光 */}
       <Sun position={[1000, 500, 1000]} />
-      <OrbitControls />
       {/* 裏側も見えるようにするためのライト */}
       <directionalLight
         position={[-100, -50, -100]}
@@ -31,8 +31,9 @@ const SpaceShootingGame: FC = () => {
       {/* 自転する地球 */}
       <Earth />
       {/* 宇宙船 */}
-      <Starship scale={.2} ref={starshipRef} />
-    </>
+      <Starship scale={0.2} ref={starshipRef} />
+      <FollowCamera targetRef={starshipRef} />
+    </group>
   );
 };
 
