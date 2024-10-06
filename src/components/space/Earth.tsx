@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { Mesh } from "three";
 
 const Earth = () => {
-  const texture = useTexture("/src/assets/earth1024x512.png");
+  const texture = useTexture("/earth1024x512.png");
   const earthRef = useRef({} as Mesh);
   useFrame(() => {
     earthRef.current.rotation.y += 0.003;
