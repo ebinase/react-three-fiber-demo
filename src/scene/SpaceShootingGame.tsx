@@ -51,7 +51,7 @@ const SpaceShootingGame: FC = () => {
   });
 
   return (
-    <group>
+    <>
       <color args={["#000"]} attach={"background"} />
       {/* 太陽光 */}
       <Sun position={[1000, 500, 1000]} />
@@ -69,7 +69,7 @@ const SpaceShootingGame: FC = () => {
       <Starship scale={0.2} ref={starshipRef} />
       {/* 自動追尾するカメラ */}
       <AutoFollowOrbitCamera targetRef={starshipRef} />
-    </group>
+    </>
   );
 };
 
