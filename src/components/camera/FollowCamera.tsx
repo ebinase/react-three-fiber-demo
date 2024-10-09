@@ -6,6 +6,7 @@ type Props = {
   targetRef: RefObject<Object3D>;
 }
 
+// ターゲットを後方の固定位置から追従するカメラ
 const FollowCamera: React.FC<Props> = ({ targetRef }) => {
   // カメラがオブジェクトの後方に来るオフセット
   const cameraOffset = new Vector3(0, .2, -1.5);

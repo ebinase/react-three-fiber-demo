@@ -5,8 +5,8 @@ import { Mesh } from "three";
 import Earth from "../components/space/Earth";
 import Starship from "../components/space/Starship";
 import Sun from "../components/space/Sun";
-import FollowCamera from "../components/camera/FollowCamera";
 import * as THREE from "three";
+import AutoFollowOrbitCamera from "../components/camera/AutoFollowOrbitCamera";
 
 const SpaceShootingGame: FC = () => {
   const [targetPosition, setTargetPosition] = useState(new THREE.Vector3(0, 0, 0));
@@ -67,7 +67,8 @@ const SpaceShootingGame: FC = () => {
       <Earth />
       {/* 宇宙船 */}
       <Starship scale={0.2} ref={starshipRef} />
-      <FollowCamera targetRef={starshipRef} />
+      {/* 自動追尾するカメラ */}
+      <AutoFollowOrbitCamera targetRef={starshipRef} />
     </group>
   );
 };
