@@ -39,7 +39,6 @@ const Space: FC = () => {
     starshipRef.current.position.set(vector.x, vector.y, vector.z);
     starshipRef.current.lookAt(0, 0, 0);
 
-
     // ====== 弾丸の処理 ======
     if (!isShooting) {
       // bulletの位置をstarshipの位置に合わせる
@@ -53,13 +52,20 @@ const Space: FC = () => {
     // 現在の位置
     const currentPosition = bulletRef.current.position;
 
+    // 原点(=地球の中心)からの距離を計算
+    const earthDiff = new THREE.Vector3().subVectors(
+      new THREE.Vector3(),
+      currentPosition
+    );
+
     // ターゲット方向ベクトルを計算
     const targetDiff = new THREE.Vector3().subVectors(
       satelliteRef.current.position,
       currentPosition
     );
 
-    if (targetDiff.length() < .01) {
+    // 弾丸が地球もしくはターゲットに衝突したら、弾丸を消す
+    if (earthDiff.length() < 1 || targetDiff.length() < 0.01) {
       setIsShooting(false);
       return;
     }
@@ -87,7 +93,7 @@ const Space: FC = () => {
     bulletRef.current.quaternion.slerp(quaternion, maxTurnRate);
 
     // 現在の向きに沿って移動
-    const speed = .05; // 移動速度
+    const speed = 0.05; // 移動速度
     bulletRef.current.position.add(newDirection.multiplyScalar(speed));
   });
 
@@ -127,17 +133,13 @@ const Space: FC = () => {
       </mesh>
       {/* 宇宙船 */}
       <mesh onClick={() => setIsShooting(!isShooting)}>
-        <Starship scale={0.02} ref={starshipRef}  /> 
+        <Starship scale={0.02} ref={starshipRef} />
       </mesh>
     
       {/* 弾丸 */}
       <mesh ref={bulletRef} position={[0, 1, 0]}>
-        <sphereGeometry args={[.01, 32, 32]} />
-        <meshPhongMaterial
-          color={"#3cd4e8"}
-          transparent={true}
-          opacity={0.7}
-        />
+        <sphereGeometry args={[0.01, 32, 32]} />
+        <meshPhongMaterial color={"#3cd4e8"} transparent={true} opacity={0.7} />
         <pointLight intensity={1.5} distance={10} decay={2} color={"white"} />
       </mesh>
     </>
