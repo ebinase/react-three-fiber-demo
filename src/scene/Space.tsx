@@ -16,6 +16,10 @@ const Space: FC = () => {
   const bulletRef = useRef({} as Mesh);
   const [isShooting, setIsShooting] = useState(false);
 
+  // シーン管理
+  const [showMessage, setShowMessage] = useState(true);
+  const messageRef = useRef({} as Group<THREE.Object3DEventMap>);
+
   useFrame((state) => {
     starsRef.current.rotation.y += 0.0003;
 
@@ -23,6 +27,11 @@ const Space: FC = () => {
     satelliteRef.current.position.x = 1.2 * Math.cos(t);
     satelliteRef.current.position.z = 1.2 * Math.sin(t);
     satelliteRef.current.lookAt(0, 0, 0);
+
+    // ====== メッセージの処理 ======
+    if (showMessage && messageRef.current.scale.x < 1) {
+      messageRef.current.scale.addScalar(0.003);
+    }
 
     // スクリーン座標での位置（例えば、右下に固定したい場合）
     const screenX = size.width * 0.5;
@@ -118,39 +127,29 @@ const Space: FC = () => {
         <Stars />
       </group>
 
-      {/* 巨大メッセージ */}
-      <Text
-        position={[0, 0, -200]}
-        color={"white"}
-        fontSize={40}
-        anchorX="center"
-        anchorY="middle"
-        textAlign="center"
-      >
-        {"HAPPY BIRTHDAY\n\nYOSHIDA 2025"}
-      </Text>
+      <group scale={0} ref={messageRef} >
+        {/* 巨大メッセージ */}
+        <Text
+          position={[0, 0, -200]}
+          color={"white"}
+          fontSize={40}
+          anchorX="center"
+          anchorY="middle"
+          textAlign="center"
+        >
+          {"HAPPY BIRTHDAY\n\nYOSHIDA 2025"}
+        </Text>
 
-
-      {/* 地球の上にテキストを表示 */}
-      {/* <Text
-        position={[0, 2, 0]}
-        color={"white"}
-        fontSize={0.5}
-        anchorX="center"
-        anchorY="middle"
-        textAlign="center"
-      >
-        {"HAPPY BIRTHDAY\nYOSHIDA\n2025"}
-      </Text> */}
-      {/* スパークル */}
-      <Sparkles
-        count={1000}
-        color={""}
-        size={40}
-        opacity={0.5}
-        scale={20}
-        speed={0.7}
-      />
+        {/* スパークル */}
+        <Sparkles
+          count={1000}
+          color={""}
+          size={40}
+          opacity={0.5}
+          scale={20}
+          speed={0.7}
+        />
+      </group>
 
       {/* 自転する地球 */}
       <Earth />
