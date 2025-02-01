@@ -1,4 +1,4 @@
-import { OrbitControls, Stars } from "@react-three/drei";
+import { OrbitControls, Stars, Text, Sparkles } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { FC, useRef, useState } from "react";
 import { Group, Mesh, Vector3 } from "three";
@@ -63,7 +63,7 @@ const Space: FC = () => {
       satelliteRef.current.position,
       currentPosition
     );
-
+    
     // 弾丸が地球もしくはターゲットに衝突したら、弾丸を消す
     if (earthDiff.length() < 1 || targetDiff.length() < 0.01) {
       setIsShooting(false);
@@ -117,11 +117,40 @@ const Space: FC = () => {
       <group ref={starsRef}>
         <Stars />
       </group>
+
+      {/* 巨大メッセージ */}
+      <Text
+        position={[0, 0, -200]}
+        color={"white"}
+        fontSize={40}
+        anchorX="center"
+        anchorY="middle"
+        textAlign="center"
+      >
+        {"HAPPY BIRTHDAY\n\nYOSHIDA 2025"}
+      </Text>
+
+
       {/* 地球の上にテキストを表示 */}
-      {/* <Text3D font="/Bangers-Regular.ttf" position={[0, 1, 0]} size={0.1}>
-      {`Hello\nWorld`}
-      </Text3D> */}
-      {"hello"}
+      {/* <Text
+        position={[0, 2, 0]}
+        color={"white"}
+        fontSize={0.5}
+        anchorX="center"
+        anchorY="middle"
+        textAlign="center"
+      >
+        {"HAPPY BIRTHDAY\nYOSHIDA\n2025"}
+      </Text> */}
+      {/* スパークル */}
+      <Sparkles
+        count={1000}
+        color={""}
+        size={40}
+        opacity={0.5}
+        scale={20}
+        speed={0.7}
+      />
 
       {/* 自転する地球 */}
       <Earth />
@@ -135,7 +164,7 @@ const Space: FC = () => {
       <mesh onClick={() => setIsShooting(!isShooting)}>
         <Starship scale={0.02} ref={starshipRef} />
       </mesh>
-    
+
       {/* 弾丸 */}
       <mesh ref={bulletRef} position={[0, 1, 0]}>
         <sphereGeometry args={[0.01, 32, 32]} />
