@@ -23,15 +23,17 @@ const Space: FC = () => {
   const bulletRef = useRef({} as Mesh);
   const [isShooting, setIsShooting] = useState(false);
 
+  const [isCapturing, setIsCapturing] = useState(false);
+
   // ターゲット
   const texture = useTexture("/dragon.png");
   const targetRef1 = useRef({} as Mesh);
   const [targets, setTargets] = useState([
-    { ref: satelliteRef, alive: true },
-    { ref: targetRef1, alive: true },
+    { ref: satelliteRef, free: true },
+    { ref: targetRef1, free: true },
   ]);
 
-  const aliveTargets = targets.filter((target) => target.alive);
+  const freeTargets = targets.filter((target) => target.free);
 
   // シーン管理
   const messageRef = useRef({} as Group<THREE.Object3DEventMap>);
@@ -40,7 +42,7 @@ const Space: FC = () => {
     // ====== 背景の星の回転 ======
     starsRef.current.rotation.y += 0.0003;
 
-    // ====== 衛星の回転 ======
+    // ====== ターゲットたちの回転 ======
     const t = state.clock.getElapsedTime();
     if (satelliteRef.current) {
       satelliteRef.current.position.x = 1.2 * Math.cos(t);
@@ -48,9 +50,16 @@ const Space: FC = () => {
       satelliteRef.current.lookAt(starshipRef.current.position);
     }
 
+    if (targetRef1.current) {
+      targetRef1.current.position.x = .8 * Math.cos(-t*0.3 + Math.PI);
+      targetRef1.current.position.y = 0.6
+      targetRef1.current.position.z = .8 * Math.sin(-t*0.3 + Math.PI);
+      targetRef1.current.lookAt(starshipRef.current.position);
+    }
+
     // ====== メッセージ表示処理 ======
     if (
-      targets.every((target) => !target.alive) &&
+      targets.every((target) => !target.free) &&
       messageRef.current.scale.x < 1
     ) {
       messageRef.current.scale.addScalar(0.005);
@@ -92,26 +101,41 @@ const Space: FC = () => {
     );
 
     // ターゲット方向ベクトルを計算
-    const currentTarget = aliveTargets[0];
+    const currentTarget = freeTargets[0];
     const targetDiff = new THREE.Vector3().subVectors(
       currentTarget?.ref.current.position ?? new THREE.Vector3(),
       currentPosition
     );
 
-    // ターゲットに衝突したら、撃墜判定
-    if (targetDiff.length() < 0.05) {
-      console.log("HIT!");
-      setTargets(
-        targets.map((target) =>
-          target.ref === currentTarget.ref
-            ? { ...target, alive: false }
-            : target
-        )
-      );
+    // ターゲットに衝突したら、捕獲判定
+    const isHit = targetDiff.length() < 0.05;
+
+    if (isHit && !isCapturing) {
+      setIsCapturing(true);
+      return;
     }
 
-    // 弾丸が地球もしくはターゲットに衝突したら、弾丸を消す
-    if (earthDiff.length() < 1 || targetDiff.length() < 0.01) {
+    if (isCapturing) {
+      if (bulletRef.current.scale.x < 30) {
+        // 捕獲演出;
+        bulletRef.current.scale.addScalar(0.2);
+      } else {
+        // 捕獲演出が終わったら、ターゲットを消す
+        setTargets(
+          targets.map((target) =>
+            target.ref === currentTarget.ref
+              ? { ...target, free: false }
+              : target
+          )
+        );
+        setIsShooting(false);
+        bulletRef.current.scale.set(1, 1, 1);
+        setIsCapturing(false);
+      }
+    }
+
+    // 弾丸が地球に衝突したら、弾丸を消す
+    if (!isCapturing && earthDiff.length() < 1) {
       setIsShooting(false);
     }
 
@@ -165,24 +189,43 @@ const Space: FC = () => {
 
       {/* Drei の Html コンポーネントを利用して、固定オーバーレイを作成 */}
       {/* 要素を傾け、さらにすこし上下に揺らす */}
-      <Html fullscreen>
-        <div
-          style={{
-            position: 'absolute',
-            top: "1vh",
-            left: "1vw",
-            background: 'rgba(255, 255, 255, 0.2)',
-            color: 'white',
-            fontSize: '12px',
-            padding: '12px',
-            borderRadius: '8px',
-            border: '1px solid white',
-          }}
-        >
-          <h1>すべてのターゲットを倒せ！</h1>
-          <p>宇宙船を長押しで操作し、クリックで追尾弾を発射</p>
-        </div>
-      </Html>
+      {freeTargets.length !== 0 && (
+        <Html fullscreen>
+          <div
+            style={{
+              position: "absolute",
+              top: "1vh",
+              left: "1vw",
+            }}
+          >
+            <div style={{
+              background: "rgba(255, 255, 255, 0.2)",
+              borderRadius: "8px",
+              border: "1px solid white",
+              padding: "12px",
+              color: "white",
+              fontSize: "12px",
+            }}>
+              <h1>すべてのターゲットを捕まえろ！</h1>
+              <p>宇宙船を長押しで操作し、クリックで捕獲弾を発射</p>
+            </div>
+            <div style={{ display: "flex", gap: "4px" }}>
+              {targets.map((target) => (
+                <img
+                  src="/dragon.png"
+                  alt="avatar"
+                  style={{
+                    width: "5vmin",
+                    height: "5vmin",
+                    opacity: target.free ? 0.5 : 1,
+                  }}
+                />
+              ))}
+            </div>
+            <p style={{color: "white"}}>{isCapturing ? "捕獲中" : ""}</p>
+          </div>
+        </Html>
+      )}
 
       <group scale={0} ref={messageRef}>
         {/* 巨大メッセージ */}
@@ -211,7 +254,7 @@ const Space: FC = () => {
         </Text>
         <Text
           position={[200, 0, 0]}
-          rotation={[0, Math.PI*3/2, 0]}
+          rotation={[0, (Math.PI * 3) / 2, 0]}
           color={"white"}
           fontSize={40}
           anchorX="center"
@@ -222,7 +265,7 @@ const Space: FC = () => {
         </Text>
         <Text
           position={[-200, 0, 0]}
-          rotation={[0, Math.PI/2, 0]}
+          rotation={[0, Math.PI / 2, 0]}
           color={"white"}
           fontSize={40}
           anchorX="center"
@@ -247,32 +290,34 @@ const Space: FC = () => {
       <Earth />
 
       {/* ターゲット */}
-      {targets.find((target) => target.ref.current === targetRef1.current)?.alive && (
+      {targets.find((target) => target.ref.current === targetRef1.current)
+        ?.free && (
         <mesh position={[0, 1, 0]} ref={targetRef1}>
-        <sphereGeometry args={[0.1, 32, 32]} />
-        <meshPhongMaterial
-          map={texture}
-          emissive={"bule"}
-          emissiveIntensity={0.1}
-        />
-      </mesh>
+          <sphereGeometry args={[0.1, 32, 32]} />
+          <meshPhongMaterial
+            map={texture}
+            emissive={"black"}
+            emissiveIntensity={0.1}
+          />
+        </mesh>
       )}
 
       {/* 軌道上を回るキューブ */}
-      {targets.find((target) => target.ref.current === satelliteRef.current)?.alive && (
+      {targets.find((target) => target.ref.current === satelliteRef.current)
+        ?.free && (
         <mesh ref={satelliteRef} position={[1.2, 0, 0]}>
-        <boxGeometry args={[0.1, 0.1, 0.1]} />
-        <meshPhongMaterial
-          map={texture}
-          emissive={"bule"}
-          emissiveIntensity={0.1}
-        />
-        <pointLight intensity={1.5} distance={10} decay={2} color={"white"} />
-      </mesh>
+          <boxGeometry args={[0.2, 0.2, 0.2]} />
+          <meshPhongMaterial
+            map={texture}
+            emissive={"black"}
+            emissiveIntensity={0.1}
+          />
+          <pointLight intensity={1.5} distance={10} decay={2} color={"white"} />
+        </mesh>
       )}
 
       {/* 宇宙船 */}
-      <mesh onClick={() => setIsShooting(!isShooting)}>
+      <mesh onClick={() => setIsShooting(true)}>
         <Starship scale={0.02} ref={starshipRef} />
       </mesh>
 
