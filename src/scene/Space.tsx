@@ -272,9 +272,9 @@ const Space: FC = () => {
 
       {/* 弾丸 */}
       <mesh ref={bulletRef} position={[0, 1, 0]}>
-        <sphereGeometry args={[0.01, 32, 32]} />
+        <sphereGeometry args={[0.02, 32, 32]} />
         <meshPhongMaterial color={"#3cd4e8"} transparent={true} opacity={0.7} />
-        <pointLight intensity={1.5} distance={10} decay={2} color={"white"} />
+        <pointLight intensity={15} distance={2} decay={2} color={"#3cd4e8"} />
       </mesh>
     </>
   );
