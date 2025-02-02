@@ -1,4 +1,11 @@
-import { OrbitControls, Stars, Text, Sparkles, useTexture } from "@react-three/drei";
+import {
+  OrbitControls,
+  Stars,
+  Text,
+  Sparkles,
+  useTexture,
+  Html,
+} from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { FC, useRef, useState } from "react";
 import { Group, Mesh, Vector3 } from "three";
@@ -20,21 +27,14 @@ const Space: FC = () => {
   const texture = useTexture("/dragon.png");
   const targetRef1 = useRef({} as Mesh);
   const [targets, setTargets] = useState([
-    {ref: satelliteRef, alive: true},
-    {ref: targetRef1, alive: true},
+    { ref: satelliteRef, alive: true },
+    { ref: targetRef1, alive: true },
   ]);
 
   const aliveTargets = targets.filter((target) => target.alive);
 
   // シーン管理
-  // const [showMessage, setShowMessage] = useState(false);
   const messageRef = useRef({} as Group<THREE.Object3DEventMap>);
-
-  // if (targets.every((target) => !target.alive)) {
-  //   setShowMessage(true);
-  // }
-
-  console.log(targets, aliveTargets);
 
   useFrame((state) => {
     // ====== 背景の星の回転 ======
@@ -47,7 +47,10 @@ const Space: FC = () => {
     satelliteRef.current.lookAt(starshipRef.current.position);
 
     // ====== メッセージ表示処理 ======
-    if (targets.every((target) => !target.alive) && messageRef.current.scale.x < 1) {
+    if (
+      targets.every((target) => !target.alive) &&
+      messageRef.current.scale.x < 1
+    ) {
       messageRef.current.scale.addScalar(0.005);
     }
 
@@ -89,7 +92,7 @@ const Space: FC = () => {
     // ターゲット方向ベクトルを計算
     const currentTarget = aliveTargets[0];
     const targetDiff = new THREE.Vector3().subVectors(
-     currentTarget?.ref.current.position ?? new THREE.Vector3(),
+      currentTarget?.ref.current.position ?? new THREE.Vector3(),
       currentPosition
     );
 
@@ -98,11 +101,13 @@ const Space: FC = () => {
       console.log("HIT!");
       setTargets(
         targets.map((target) =>
-          target.ref === currentTarget.ref ? { ...target, alive: false } : target
+          target.ref === currentTarget.ref
+            ? { ...target, alive: false }
+            : target
         )
       );
     }
-    
+
     // 弾丸が地球もしくはターゲットに衝突したら、弾丸を消す
     if (earthDiff.length() < 1 || targetDiff.length() < 0.01) {
       setIsShooting(false);
@@ -156,10 +161,66 @@ const Space: FC = () => {
         <Stars />
       </group>
 
-      <group scale={0} ref={messageRef} >
+      {/* Drei の Html コンポーネントを利用して、固定オーバーレイを作成 */}
+      {/* 要素を傾け、さらにすこし上下に揺らす */}
+      <Html fullscreen>
+        <div
+          style={{
+            position: 'absolute',
+            top: "1vh",
+            left: "1vw",
+            background: 'rgba(255, 255, 255, 0.2)',
+            color: 'white',
+            fontSize: '12px',
+            padding: '12px',
+            borderRadius: '8px',
+            border: '1px solid white',
+          }}
+        >
+          <h1>すべてのターゲットを倒せ！</h1>
+          <p>宇宙船を長押しで操作し、クリックで追尾弾を発射</p>
+        </div>
+      </Html>
+
+      <group scale={0} ref={messageRef}>
         {/* 巨大メッセージ */}
         <Text
           position={[0, 0, -200]}
+          color={"white"}
+          fontSize={40}
+          anchorX="center"
+          anchorY="middle"
+          textAlign="center"
+        >
+          {"HAPPY BIRTHDAY\n\nYOSHIDA 2025"}
+        </Text>
+
+        <Text
+          position={[0, 0, 200]}
+          // 反転させる
+          rotation={[0, Math.PI, 0]}
+          color={"white"}
+          fontSize={40}
+          anchorX="center"
+          anchorY="middle"
+          textAlign="center"
+        >
+          {"HAPPY BIRTHDAY\n\nYOSHIDA 2025"}
+        </Text>
+        <Text
+          position={[200, 0, 0]}
+          rotation={[0, Math.PI*3/2, 0]}
+          color={"white"}
+          fontSize={40}
+          anchorX="center"
+          anchorY="middle"
+          textAlign="center"
+        >
+          {"HAPPY BIRTHDAY\n\nYOSHIDA 2025"}
+        </Text>
+        <Text
+          position={[-200, 0, 0]}
+          rotation={[0, Math.PI/2, 0]}
           color={"white"}
           fontSize={40}
           anchorX="center"
@@ -186,13 +247,21 @@ const Space: FC = () => {
       {/* ターゲット */}
       <mesh position={[0, 1, 0]} ref={targetRef1}>
         <sphereGeometry args={[0.1, 32, 32]} />
-        <meshPhongMaterial map={texture} emissive={"bule"} emissiveIntensity={.1} />
+        <meshPhongMaterial
+          map={texture}
+          emissive={"bule"}
+          emissiveIntensity={0.1}
+        />
       </mesh>
 
       {/* 軌道上を回るキューブ */}
       <mesh ref={satelliteRef} position={[1.2, 0, 0]}>
         <boxGeometry args={[0.1, 0.1, 0.1]} />
-        <meshPhongMaterial map={texture} emissive={"bule"} emissiveIntensity={.1} />
+        <meshPhongMaterial
+          map={texture}
+          emissive={"bule"}
+          emissiveIntensity={0.1}
+        />
         <pointLight intensity={1.5} distance={10} decay={2} color={"white"} />
       </mesh>
 

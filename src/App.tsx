@@ -1,18 +1,16 @@
 import { Canvas } from "@react-three/fiber";
 import Space from "./scene/Space";
 import React from "react";
-import ThreeBoxes from "./scene/ThreeBoxes";
 import { match } from "ts-pattern";
 import { Stats } from "@react-three/drei";
 import NoContent from "./scene/NoContent";
-import SpaceShootingGame from "./scene/SpaceShootingGame";
 
 function App() {
   const [worldNum, setWorldNum] = React.useState(0);
   const [devMode, setDevMode] = React.useState(false);
 
   return (
-    <div className="relative">
+    <div className="relative select-none">
       <div className="absolute top-0 right-0 m-4 z-10 opacity-0 hover:opacity-100 flex gap-2">
         <button
           className={`p-2 rounded-md text-white ${
@@ -45,8 +43,6 @@ function App() {
 
           {match(worldNum % 3)
             .with(0, () => <Space />)
-            .with(1, () => <ThreeBoxes />)
-            .with(2, () => <SpaceShootingGame />)
             .otherwise(() => (
               <NoContent />
             ))}
