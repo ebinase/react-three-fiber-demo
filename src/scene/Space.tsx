@@ -1,4 +1,4 @@
-import { OrbitControls, Stars, Text, Sparkles } from "@react-three/drei";
+import { OrbitControls, Stars, Text, Sparkles, useTexture } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { FC, useRef, useState } from "react";
 import { Group, Mesh, Vector3 } from "three";
@@ -16,24 +16,43 @@ const Space: FC = () => {
   const bulletRef = useRef({} as Mesh);
   const [isShooting, setIsShooting] = useState(false);
 
+  // ターゲット
+  const texture = useTexture("/dragon.png");
+  const targetRef1 = useRef({} as Mesh);
+  const [targets, setTargets] = useState([
+    {ref: satelliteRef, alive: true},
+    {ref: targetRef1, alive: true},
+  ]);
+
+  const aliveTargets = targets.filter((target) => target.alive);
+
   // シーン管理
-  const [showMessage, setShowMessage] = useState(true);
+  // const [showMessage, setShowMessage] = useState(false);
   const messageRef = useRef({} as Group<THREE.Object3DEventMap>);
 
+  // if (targets.every((target) => !target.alive)) {
+  //   setShowMessage(true);
+  // }
+
+  console.log(targets, aliveTargets);
+
   useFrame((state) => {
+    // ====== 背景の星の回転 ======
     starsRef.current.rotation.y += 0.0003;
 
+    // ====== 衛星の回転 ======
     const t = state.clock.getElapsedTime();
     satelliteRef.current.position.x = 1.2 * Math.cos(t);
     satelliteRef.current.position.z = 1.2 * Math.sin(t);
-    satelliteRef.current.lookAt(0, 0, 0);
+    satelliteRef.current.lookAt(starshipRef.current.position);
 
-    // ====== メッセージの処理 ======
-    if (showMessage && messageRef.current.scale.x < 1) {
-      messageRef.current.scale.addScalar(0.003);
+    // ====== メッセージ表示処理 ======
+    if (targets.every((target) => !target.alive) && messageRef.current.scale.x < 1) {
+      messageRef.current.scale.addScalar(0.005);
     }
 
-    // スクリーン座標での位置（例えば、右下に固定したい場合）
+    // ====== 宇宙船の位置をカメラと同期 ======
+    // スクリーン座標での位置
     const screenX = size.width * 0.5;
     const screenY = size.height * (0.8 + 0.02 * Math.sin(t));
 
@@ -68,15 +87,25 @@ const Space: FC = () => {
     );
 
     // ターゲット方向ベクトルを計算
+    const currentTarget = aliveTargets[0];
     const targetDiff = new THREE.Vector3().subVectors(
-      satelliteRef.current.position,
+     currentTarget?.ref.current.position ?? new THREE.Vector3(),
       currentPosition
     );
+
+    // ターゲットに衝突したら、撃墜判定
+    if (targetDiff.length() < 0.05) {
+      console.log("HIT!");
+      setTargets(
+        targets.map((target) =>
+          target.ref === currentTarget.ref ? { ...target, alive: false } : target
+        )
+      );
+    }
     
     // 弾丸が地球もしくはターゲットに衝突したら、弾丸を消す
     if (earthDiff.length() < 1 || targetDiff.length() < 0.01) {
       setIsShooting(false);
-      return;
     }
 
     const targetDirection = targetDiff.normalize();
@@ -153,12 +182,20 @@ const Space: FC = () => {
 
       {/* 自転する地球 */}
       <Earth />
+
+      {/* ターゲット */}
+      <mesh position={[0, 1, 0]} ref={targetRef1}>
+        <sphereGeometry args={[0.1, 32, 32]} />
+        <meshPhongMaterial map={texture} emissive={"bule"} emissiveIntensity={.1} />
+      </mesh>
+
       {/* 軌道上を回るキューブ */}
       <mesh ref={satelliteRef} position={[1.2, 0, 0]}>
         <boxGeometry args={[0.1, 0.1, 0.1]} />
-        <meshPhongMaterial emissive={"white"} emissiveIntensity={2} />
+        <meshPhongMaterial map={texture} emissive={"bule"} emissiveIntensity={.1} />
         <pointLight intensity={1.5} distance={10} decay={2} color={"white"} />
       </mesh>
+
       {/* 宇宙船 */}
       <mesh onClick={() => setIsShooting(!isShooting)}>
         <Starship scale={0.02} ref={starshipRef} />
