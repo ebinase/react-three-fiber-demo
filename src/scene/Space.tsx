@@ -42,9 +42,11 @@ const Space: FC = () => {
 
     // ====== 衛星の回転 ======
     const t = state.clock.getElapsedTime();
-    satelliteRef.current.position.x = 1.2 * Math.cos(t);
-    satelliteRef.current.position.z = 1.2 * Math.sin(t);
-    satelliteRef.current.lookAt(starshipRef.current.position);
+    if (satelliteRef.current) {
+      satelliteRef.current.position.x = 1.2 * Math.cos(t);
+      satelliteRef.current.position.z = 1.2 * Math.sin(t);
+      satelliteRef.current.lookAt(starshipRef.current.position);
+    }
 
     // ====== メッセージ表示処理 ======
     if (
@@ -245,7 +247,8 @@ const Space: FC = () => {
       <Earth />
 
       {/* ターゲット */}
-      <mesh position={[0, 1, 0]} ref={targetRef1}>
+      {targets.find((target) => target.ref.current === targetRef1.current)?.alive && (
+        <mesh position={[0, 1, 0]} ref={targetRef1}>
         <sphereGeometry args={[0.1, 32, 32]} />
         <meshPhongMaterial
           map={texture}
@@ -253,9 +256,11 @@ const Space: FC = () => {
           emissiveIntensity={0.1}
         />
       </mesh>
+      )}
 
       {/* 軌道上を回るキューブ */}
-      <mesh ref={satelliteRef} position={[1.2, 0, 0]}>
+      {targets.find((target) => target.ref.current === satelliteRef.current)?.alive && (
+        <mesh ref={satelliteRef} position={[1.2, 0, 0]}>
         <boxGeometry args={[0.1, 0.1, 0.1]} />
         <meshPhongMaterial
           map={texture}
@@ -264,6 +269,7 @@ const Space: FC = () => {
         />
         <pointLight intensity={1.5} distance={10} decay={2} color={"white"} />
       </mesh>
+      )}
 
       {/* 宇宙船 */}
       <mesh onClick={() => setIsShooting(!isShooting)}>
