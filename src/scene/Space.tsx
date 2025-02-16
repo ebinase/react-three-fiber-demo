@@ -32,11 +32,6 @@ const Space: FC = () => {
 
     // ====== ターゲットたちの回転 ======
     const t = state.clock.getElapsedTime();
-    if (satelliteRef.current) {
-      satelliteRef.current.position.x = 1.2 * Math.cos(t);
-      satelliteRef.current.position.z = 1.2 * Math.sin(t);
-      satelliteRef.current.lookAt(starshipRef.current.position);
-    }
 
     // ====== メッセージ表示処理 ======
     if (
@@ -97,9 +92,10 @@ const Space: FC = () => {
     }
 
     if (isCapturing) {
-      if (bulletRef.current.scale.x < 200) {
+      if (bulletRef.current.scale.x < 300) {
         // 捕獲演出;
-        bulletRef.current.scale.addScalar(1.5);
+        currentTarget.ref.current.scale.set(0, 0, 0);
+        bulletRef.current.scale.addScalar(2);
         bulletRef.current.position.set(
           currentTarget.ref.current.position.x,
           currentTarget.ref.current.position.y,
@@ -119,6 +115,14 @@ const Space: FC = () => {
       }
 
       return;
+    }
+
+    // 捕獲中は動かないようにここに書いている
+    if (satelliteRef.current) {
+      satelliteRef.current.position.x = 1.2 * Math.cos(t*2.3);
+      satelliteRef.current.position.z = 1.2 * Math.sin(t*2.3);
+      satelliteRef.current.position.y = 0.5 * Math.sin(t*3);
+      satelliteRef.current.lookAt(0, 0, 0);
     }
     
     bulletRef.current.scale.set(1, 1, 1);
@@ -151,7 +155,7 @@ const Space: FC = () => {
     bulletRef.current.quaternion.slerp(quaternion, maxTurnRate);
 
     // 現在の向きに沿って移動
-    const speed = 0.05; // 移動速度
+    const speed = 0.06; // 移動速度
     bulletRef.current.position.add(newDirection.multiplyScalar(speed));
   });
 
