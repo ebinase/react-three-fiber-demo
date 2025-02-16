@@ -227,7 +227,7 @@ const Space: FC = () => {
           anchorY="middle"
           textAlign="center"
         >
-          {"HAPPY BIRTHDAY\n\nYOSHIDA 2025"}
+          {"HAPPY BIRTHDAY\n\nTAKAFUMI 2025"}
         </Text>
 
         <Text
@@ -240,7 +240,7 @@ const Space: FC = () => {
           anchorY="middle"
           textAlign="center"
         >
-          {"HAPPY BIRTHDAY\n\nYOSHIDA 2025"}
+          {"HAPPY BIRTHDAY\n\nTAKAFUMI 2025"}
         </Text>
         <Text
           position={[200, 0, 0]}
@@ -251,7 +251,7 @@ const Space: FC = () => {
           anchorY="middle"
           textAlign="center"
         >
-          {"HAPPY BIRTHDAY\n\nYOSHIDA 2025"}
+          {"HAPPY BIRTHDAY\n\nTAKAFUMI 2025"}
         </Text>
         <Text
           position={[-200, 0, 0]}
@@ -262,7 +262,7 @@ const Space: FC = () => {
           anchorY="middle"
           textAlign="center"
         >
-          {"HAPPY BIRTHDAY\n\nYOSHIDA 2025"}
+          {"HAPPY BIRTHDAY\n\nTAKAFUMI 2025"}
         </Text>
 
         {/* スパークル */}
