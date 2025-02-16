@@ -176,15 +176,13 @@ const Space: FC = () => {
       </group>
 
       {/* Drei の Html コンポーネントを利用して、固定オーバーレイを作成 */}
-      {/* 要素を傾け、さらにすこし上下に揺らす */}
       {freeTargets.length !== 0 && (
         <Html fullscreen>
           <div
             style={{
-              position: "absolute",
-              top: "1vh",
-              left: "1vw",
+              padding: "16px",
             }}
+            className="bounce"
           >
             <div
               style={{
@@ -194,25 +192,13 @@ const Space: FC = () => {
                 padding: "12px",
                 color: "white",
                 fontSize: "12px",
+                textAlign: "center",
               }}
             >
-              <h1>すべてのターゲットを捕まえろ！</h1>
+              <h1 style={{fontWeight: "bold"}}>ターゲットを狙え！</h1>
               <p>宇宙船を長押しで操作し、クリックで捕獲弾を発射</p>
             </div>
-            <div style={{ display: "flex", gap: "4px" }}>
-              {targets.map((target) => (
-                <img
-                  src="/dragon.png"
-                  alt="avatar"
-                  style={{
-                    width: "5vmin",
-                    height: "5vmin",
-                    opacity: target.free ? 0.5 : 1,
-                  }}
-                />
-              ))}
-            </div>
-            <p style={{ color: "white" }}>{isCapturing ? "捕獲中" : ""}</p>
+            <p style={{ color: "white" }}>{isCapturing ? "" : ""}</p>
           </div>
         </Html>
       )}
@@ -227,7 +213,7 @@ const Space: FC = () => {
           anchorY="middle"
           textAlign="center"
         >
-          {"HAPPY BIRTHDAY\n\nTAKAFUMI 2025"}
+          {"HAPPY\nBIRTHDAY\n\n\nTAKAFUMI\n2025"}
         </Text>
 
         <Text
@@ -240,7 +226,7 @@ const Space: FC = () => {
           anchorY="middle"
           textAlign="center"
         >
-          {"HAPPY BIRTHDAY\n\nTAKAFUMI 2025"}
+          {"HAPPY\nBIRTHDAY\n\n\nTAKAFUMI\n2025"}
         </Text>
         <Text
           position={[200, 0, 0]}
@@ -251,7 +237,7 @@ const Space: FC = () => {
           anchorY="middle"
           textAlign="center"
         >
-          {"HAPPY BIRTHDAY\n\nTAKAFUMI 2025"}
+          {"HAPPY\nBIRTHDAY\n\n\nTAKAFUMI\n2025"}
         </Text>
         <Text
           position={[-200, 0, 0]}
@@ -262,7 +248,7 @@ const Space: FC = () => {
           anchorY="middle"
           textAlign="center"
         >
-          {"HAPPY BIRTHDAY\n\nTAKAFUMI 2025"}
+          {"HAPPY\nBIRTHDAY\n\n\nTAKAFUMI\n2025"}
         </Text>
 
         {/* スパークル */}
