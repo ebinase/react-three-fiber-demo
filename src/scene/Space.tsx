@@ -26,12 +26,7 @@ const Space: FC = () => {
   const [isCapturing, setIsCapturing] = useState(false);
 
   // ターゲット
-  const texture = useTexture("/dragon.png");
-  const targetRef1 = useRef({} as Mesh);
-  const [targets, setTargets] = useState([
-    { ref: satelliteRef, free: true },
-    { ref: targetRef1, free: true },
-  ]);
+  const [targets, setTargets] = useState([{ ref: satelliteRef, free: true }]);
 
   const freeTargets = targets.filter((target) => target.free);
 
@@ -48,13 +43,6 @@ const Space: FC = () => {
       satelliteRef.current.position.x = 1.2 * Math.cos(t);
       satelliteRef.current.position.z = 1.2 * Math.sin(t);
       satelliteRef.current.lookAt(starshipRef.current.position);
-    }
-
-    if (targetRef1.current) {
-      targetRef1.current.position.x = .8 * Math.cos(-t*0.3 + Math.PI);
-      targetRef1.current.position.y = 0.6
-      targetRef1.current.position.z = .8 * Math.sin(-t*0.3 + Math.PI);
-      targetRef1.current.lookAt(starshipRef.current.position);
     }
 
     // ====== メッセージ表示処理 ======
@@ -198,14 +186,16 @@ const Space: FC = () => {
               left: "1vw",
             }}
           >
-            <div style={{
-              background: "rgba(255, 255, 255, 0.2)",
-              borderRadius: "8px",
-              border: "1px solid white",
-              padding: "12px",
-              color: "white",
-              fontSize: "12px",
-            }}>
+            <div
+              style={{
+                background: "rgba(255, 255, 255, 0.2)",
+                borderRadius: "8px",
+                border: "1px solid white",
+                padding: "12px",
+                color: "white",
+                fontSize: "12px",
+              }}
+            >
               <h1>すべてのターゲットを捕まえろ！</h1>
               <p>宇宙船を長押しで操作し、クリックで捕獲弾を発射</p>
             </div>
@@ -222,7 +212,7 @@ const Space: FC = () => {
                 />
               ))}
             </div>
-            <p style={{color: "white"}}>{isCapturing ? "捕獲中" : ""}</p>
+            <p style={{ color: "white" }}>{isCapturing ? "捕獲中" : ""}</p>
           </div>
         </Html>
       )}
@@ -289,29 +279,12 @@ const Space: FC = () => {
       {/* 自転する地球 */}
       <Earth />
 
-      {/* ターゲット */}
-      {targets.find((target) => target.ref.current === targetRef1.current)
-        ?.free && (
-        <mesh position={[0, 1, 0]} ref={targetRef1}>
-          <sphereGeometry args={[0.1, 32, 32]} />
-          <meshPhongMaterial
-            map={texture}
-            emissive={"black"}
-            emissiveIntensity={0.1}
-          />
-        </mesh>
-      )}
-
       {/* 軌道上を回るキューブ */}
       {targets.find((target) => target.ref.current === satelliteRef.current)
         ?.free && (
         <mesh ref={satelliteRef} position={[1.2, 0, 0]}>
-          <boxGeometry args={[0.2, 0.2, 0.2]} />
-          <meshPhongMaterial
-            map={texture}
-            emissive={"black"}
-            emissiveIntensity={0.1}
-          />
+          <boxGeometry args={[0.1, 0.1, 0.1]} />
+          <meshPhongMaterial emissive={"white"} emissiveIntensity={2} />
           <pointLight intensity={1.5} distance={10} decay={2} color={"white"} />
         </mesh>
       )}
