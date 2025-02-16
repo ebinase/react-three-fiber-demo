@@ -1,11 +1,4 @@
-import {
-  OrbitControls,
-  Stars,
-  Text,
-  Sparkles,
-  useTexture,
-  Html,
-} from "@react-three/drei";
+import { OrbitControls, Stars, Text, Sparkles, Html } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { FC, useRef, useState } from "react";
 import { Group, Mesh, Vector3 } from "three";
@@ -104,9 +97,14 @@ const Space: FC = () => {
     }
 
     if (isCapturing) {
-      if (bulletRef.current.scale.x < 30) {
+      if (bulletRef.current.scale.x < 200) {
         // 捕獲演出;
-        bulletRef.current.scale.addScalar(0.2);
+        bulletRef.current.scale.addScalar(1.5);
+        bulletRef.current.position.set(
+          currentTarget.ref.current.position.x,
+          currentTarget.ref.current.position.y,
+          currentTarget.ref.current.position.z
+        )
       } else {
         // 捕獲演出が終わったら、ターゲットを消す
         setTargets(
@@ -117,10 +115,13 @@ const Space: FC = () => {
           )
         );
         setIsShooting(false);
-        bulletRef.current.scale.set(1, 1, 1);
         setIsCapturing(false);
       }
+
+      return;
     }
+    
+    bulletRef.current.scale.set(1, 1, 1);
 
     // 弾丸が地球に衝突したら、弾丸を消す
     if (!isCapturing && earthDiff.length() < 1) {
@@ -195,7 +196,7 @@ const Space: FC = () => {
                 textAlign: "center",
               }}
             >
-              <h1 style={{fontWeight: "bold"}}>ターゲットを狙え！</h1>
+              <h1 style={{ fontWeight: "bold" }}>ターゲットを狙え！</h1>
               <p>宇宙船を長押しで操作し、クリックで捕獲弾を発射</p>
             </div>
             <p style={{ color: "white" }}>{isCapturing ? "" : ""}</p>
@@ -203,64 +204,66 @@ const Space: FC = () => {
         </Html>
       )}
 
-      <group scale={0} ref={messageRef}>
-        {/* 巨大メッセージ */}
-        <Text
-          position={[0, 0, -200]}
-          color={"white"}
-          fontSize={40}
-          anchorX="center"
-          anchorY="middle"
-          textAlign="center"
-        >
-          {"HAPPY\nBIRTHDAY\n\n\nTAKAFUMI\n2025"}
-        </Text>
+      {freeTargets.length === 0 && (
+        <group scale={0} ref={messageRef}>
+          {/* 巨大メッセージ */}
+          <Text
+            position={[0, 0, -200]}
+            color={"white"}
+            fontSize={30}
+            anchorX="center"
+            anchorY="middle"
+            textAlign="center"
+          >
+            {"HAPPY\nBIRTHDAY\n\n\nTAKAFUMI\n2025"}
+          </Text>
 
-        <Text
-          position={[0, 0, 200]}
-          // 反転させる
-          rotation={[0, Math.PI, 0]}
-          color={"white"}
-          fontSize={40}
-          anchorX="center"
-          anchorY="middle"
-          textAlign="center"
-        >
-          {"HAPPY\nBIRTHDAY\n\n\nTAKAFUMI\n2025"}
-        </Text>
-        <Text
-          position={[200, 0, 0]}
-          rotation={[0, (Math.PI * 3) / 2, 0]}
-          color={"white"}
-          fontSize={40}
-          anchorX="center"
-          anchorY="middle"
-          textAlign="center"
-        >
-          {"HAPPY\nBIRTHDAY\n\n\nTAKAFUMI\n2025"}
-        </Text>
-        <Text
-          position={[-200, 0, 0]}
-          rotation={[0, Math.PI / 2, 0]}
-          color={"white"}
-          fontSize={40}
-          anchorX="center"
-          anchorY="middle"
-          textAlign="center"
-        >
-          {"HAPPY\nBIRTHDAY\n\n\nTAKAFUMI\n2025"}
-        </Text>
+          <Text
+            position={[0, 0, 200]}
+            // 反転させる
+            rotation={[0, Math.PI, 0]}
+            color={"white"}
+            fontSize={30}
+            anchorX="center"
+            anchorY="middle"
+            textAlign="center"
+          >
+            {"HAPPY\nBIRTHDAY\n\n\nTAKAFUMI\n2025"}
+          </Text>
+          <Text
+            position={[200, 0, 0]}
+            rotation={[0, (Math.PI * 3) / 2, 0]}
+            color={"white"}
+            fontSize={30}
+            anchorX="center"
+            anchorY="middle"
+            textAlign="center"
+          >
+            {"HAPPY\nBIRTHDAY\n\n\nTAKAFUMI\n2025"}
+          </Text>
+          <Text
+            position={[-200, 0, 0]}
+            rotation={[0, Math.PI / 2, 0]}
+            color={"white"}
+            fontSize={30}
+            anchorX="center"
+            anchorY="middle"
+            textAlign="center"
+          >
+            {"HAPPY\nBIRTHDAY\n\n\nTAKAFUMI\n2025"}
+          </Text>
 
-        {/* スパークル */}
-        <Sparkles
-          count={1000}
-          color={""}
-          size={40}
-          opacity={0.5}
-          scale={20}
-          speed={0.7}
-        />
-      </group>
+          {/* スパークル */}
+          <Sparkles
+            count={1000}
+            color={""}
+            size={40}
+            opacity={0.5}
+            scale={20}
+            speed={0.7}
+          />
+        </group>
+      )}
 
       {/* 自転する地球 */}
       <Earth />
