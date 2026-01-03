@@ -12,7 +12,7 @@ function App() {
   const [devMode, setDevMode] = React.useState(false);
 
   return (
-    <div className="relative">
+    <div className="relative select-none">
       <div className="absolute top-0 right-0 m-4 z-10 opacity-0 hover:opacity-100 flex gap-2">
         <button
           className={`p-2 rounded-md text-white ${
