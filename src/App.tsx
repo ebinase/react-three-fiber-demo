@@ -5,7 +5,7 @@ import ThreeBoxes from "./scene/ThreeBoxes";
 import { match } from "ts-pattern";
 import { Stats } from "@react-three/drei";
 import NoContent from "./scene/NoContent";
-import SpaceShootingGame from "./scene/SpaceShootingGame";
+import AutoPilot from "./scene/AutoPilot";
 
 function App() {
   const [worldNum, setWorldNum] = React.useState(0);
@@ -46,7 +46,7 @@ function App() {
           {match(worldNum % 3)
             .with(0, () => <Space />)
             .with(1, () => <ThreeBoxes />)
-            .with(2, () => <SpaceShootingGame />)
+            .with(2, () => <AutoPilot />)
             .otherwise(() => (
               <NoContent />
             ))}

@@ -8,7 +8,7 @@ import Sun from "../components/space/Sun";
 import FollowCamera from "../components/camera/FollowCamera";
 import * as THREE from "three";
 
-const SpaceShootingGame: FC = () => {
+const AutoPilot: FC = () => {
   const [targetPosition, setTargetPosition] = useState(new THREE.Vector3(0, 0, 0));
   const starshipRef = useRef({} as Mesh);
   useFrame(() => {
@@ -72,4 +72,4 @@ const SpaceShootingGame: FC = () => {
   );
 };
 
-export default SpaceShootingGame;
+export default AutoPilot;
